@@ -7,6 +7,7 @@ import { Link, router } from "expo-router";
 import OAuth from "@/components/OAuth";
 import { useSignUp } from "@clerk/clerk-expo";
 import { ReactNativeModal } from "react-native-modal";
+import { fetchAPI } from "@/lib/fetch";
 
 export default function SignUp() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -51,14 +52,14 @@ export default function SignUp() {
         code: verification.code,
       });
       if (completeSignUp.status === "complete") {
-        // await fetchAPI("/(api)/user", {
-        //   method: "POST",
-        //   body: JSON.stringify({
-        //     name: form.name,
-        //     email: form.email,
-        //     clerkId: completeSignUp.createdUserId,
-        //   }),
-        // });
+        await fetchAPI("/(api)/user", {
+          method: "POST",
+          body: JSON.stringify({
+            name: form.name,
+            email: form.email,
+            clerkId: completeSignUp.createdUserId,
+          }),
+        });
         await setActive({ session: completeSignUp.createdSessionId });
         setVerification({
           ...verification,
@@ -125,7 +126,8 @@ export default function SignUp() {
           <OAuth />
           <Link
             href="/sign-in"
-            className="text-lg text-center text-general-200 mt-10">
+            className="text-lg text-center text-general-200 mt-10"
+          >
             <Text>Already have an account?</Text>{" "}
             <Text className="text-primary-500">Log In</Text>
           </Link>
@@ -141,7 +143,8 @@ export default function SignUp() {
               if (verification.state === "success") {
                 setShowSuccessModal(true);
               }
-            }}>
+            }}
+          >
             <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
               <Text className="font-JakartaExtraBold text-2xl mb-2">
                 Verification
