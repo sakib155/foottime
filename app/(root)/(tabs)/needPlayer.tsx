@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 
-// Demo Data (Abrar, replace this with your real data from neondb later)
+// Demo Data (Abrar, replace this with your real data from database later)
 const demoData = [
     {
         id: '1',
@@ -67,13 +67,15 @@ const NeedPlayer = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        paddingTop: 50, // Adjust this value to move the content down
+        paddingHorizontal: 16,
         backgroundColor: '#F9F9F9',
     },
     heading: {
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 16,
+        paddingVertical: 10, // Adds extra space around the heading
     },
     card: {
         flexDirection: 'row',
