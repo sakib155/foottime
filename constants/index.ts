@@ -12,6 +12,8 @@ import signupimg from "@/assets/images/signupimg.png";
 import lock from "@/assets/icons/lock.png";
 import home from "@/assets/icons/home.png";
 import profile from "@/assets/icons/profile.png";
+import NeedPlayer from "@/assets/icons/NeedPlayer.png";
+import out from "@/assets/icons/out.png";
 export const images = {
   onboarding1,
   onboarding2,
@@ -22,6 +24,7 @@ export const images = {
   check,
 };
 
+
 export const icons = {
   email,
   lock,
@@ -29,6 +32,8 @@ export const icons = {
   checkmark,
   home,
   profile,
+  NeedPlayer,
+  out,
 };
 
 export const onboarding = [

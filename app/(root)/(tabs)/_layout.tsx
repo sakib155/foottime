@@ -57,6 +57,16 @@ export default function Layout() {
           ),
         }}
       />
+        <Tabs.Screen
+            name="needPlayer"
+            options={{
+                title: "Look for Player",
+                headerShown: false,
+                tabBarIcon: ({ focused }) => (
+                    <TabIcon source={icons.NeedPlayer} focused={focused} />
+                ),
+            }}
+        />
       <Tabs.Screen
         name="profile"
         options={{
