@@ -67,7 +67,7 @@ const NeedPlayer = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 50, // Adjust this value to move the content down
+        paddingTop: 50,
         paddingHorizontal: 16,
         backgroundColor: '#F9F9F9',
     },
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 16,
-        paddingVertical: 10, // Adds extra space around the heading
+        paddingVertical: 10,
     },
     card: {
         flexDirection: 'row',
