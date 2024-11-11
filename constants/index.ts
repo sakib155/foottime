@@ -1,4 +1,3 @@
-
 import noResult from "@/assets/images/no-result.png";
 import getStarted from "@/assets/images/get-started.png";
 import email from "@/assets/icons/email.png";
@@ -13,6 +12,7 @@ import lock from "@/assets/icons/lock.png";
 import home from "@/assets/icons/home.png";
 import profile from "@/assets/icons/profile.png";
 import NeedPlayer from "@/assets/icons/NeedPlayer.png";
+import list from "@/assets/icons/list.png";
 import out from "@/assets/icons/out.png";
 export const images = {
   onboarding1,
@@ -24,7 +24,6 @@ export const images = {
   check,
 };
 
-
 export const icons = {
   email,
   lock,
@@ -34,6 +33,7 @@ export const icons = {
   profile,
   NeedPlayer,
   out,
+  list,
 };
 
 export const onboarding = [
