@@ -39,23 +39,23 @@ export const icons = {
 export const onboarding = [
   {
     id: 1,
-    title: "The perfect ride is just a tap away!",
+    title: "Find Your Team, Book Your Game!",
     description:
-      "Your journey begins with Ryde. Find your ideal ride effortlessly.",
+      "From field reservations to finding the perfect teammates, we've got you covered!",
     image: images.onboarding1,
   },
   {
     id: 2,
-    title: "Best car in your hands with Ryde",
+    title: "Match Players, Create Teams!",
     description:
-      "Discover the convenience of finding your perfect ride with Ryde",
+      "Build balanced teams by selecting players based on their positions effortlessly.",
     image: images.onboarding2,
   },
   {
     id: 3,
-    title: "Your ride, your way. Let's go!",
+    title: "Simplify Football, Maximize Fun!",
     description:
-      "Enter your destination, sit back, and let us take care of the rest.",
+      "Book fields, fill open slots, and connect with nearby players—all in one place!",
     image: images.onboarding3,
   },
 ];
