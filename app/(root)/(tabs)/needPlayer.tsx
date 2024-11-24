@@ -1,72 +1,168 @@
-import React from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Modal, Button } from "react-native";
 
-// Demo Data (Abrar, replace this with your real data from database later)
 const demoData = [
   {
     id: "1",
     teamName: "Benjamin Evalent",
-    inTime: "54'",
-    outPlayer: "Jarvis Pepperspray",
-    playerNumber: 2,
+    playerNeed: 2,
+    neededPlayers: [
+      { position: "Goalkeeper", count: 1 },
+      { position: "Midfielder", count: 1 },
+    ],
   },
   {
     id: "2",
     teamName: "Spruce Springclean",
-    inTime: "72'",
-    outPlayer: "Thomas R. Toe",
-    playerNumber: 3,
+    playerNeed: 2,
+    neededPlayers: [
+      { position: "Defender", count: 1 },
+      { position: "Striker", count: 1 },
+    ],
   },
   {
     id: "3",
     teamName: "Benjamin Evalent",
-    inTime: "54'",
-    outPlayer: "Jarvis Pepperspray",
-    playerNumber: 4,
+    playerNeed: 2,
+    neededPlayers: [
+      { position: "Midfielder", count: 2 },
+    ],
   },
   {
     id: "4",
     teamName: "Spruce Springclean",
-    inTime: "72'",
-    outPlayer: "Thomas R. Toe",
-    playerNumber: 6,
+    playerNeed: 5,
+    neededPlayers: [
+      { position: "Goalkeeper", count: 1 },
+      { position: "Defender", count: 2 },
+      { position: "Striker", count: 2 },
+    ],
   },
 ];
 
 const NeedPlayer = () => {
+  const [expandedCard, setExpandedCard] = useState(null);
+  const [selectedPosition, setSelectedPosition] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [updatedData, setUpdatedData] = useState(demoData);
+
+  const toggleCard = (id, team) => {
+    setSelectedTeam(team);
+    setExpandedCard(expandedCard === id ? null : id);
+  };
+
+  const handleJoin = (teamId, position) => {
+    const newData = [...updatedData];
+    const teamIndex = newData.findIndex((team) => team.id === teamId);
+    const team = newData[teamIndex];
+
+    const positionIndex = team.neededPlayers.findIndex(
+        (player) => player.position === position
+    );
+    if (positionIndex >= 0) {
+      const newCount = team.neededPlayers[positionIndex].count - 1;
+      if (newCount <= 0) {
+        team.neededPlayers.splice(positionIndex, 1);
+      } else {
+        team.neededPlayers[positionIndex].count = newCount;
+      }
+      team.playerNeed -= 1;
+    }
+
+    setUpdatedData(newData);
+    setModalVisible(false);
+    setSelectedPosition("");
+  };
+
   const renderItem = ({ item }) => (
-    <View style={styles.card}>
-      <View style={styles.cardLeft}>
-        <View style={styles.playerNumberContainer}>
-          <Text style={styles.playerNumber}>{item.playerNumber}</Text>
-        </View>
-        <Text style={styles.teamName}>{item.teamName}</Text>
-      </View>
-      <View style={styles.cardRight}>
-        <Text style={styles.inTime}>{item.inTime}</Text>
-        <Text style={styles.outPlayer}>Out: {item.outPlayer}</Text>
-        <TouchableOpacity style={styles.joinButton}>
-          <Text style={styles.joinButtonText}>Join</Text>
+      <View style={styles.card}>
+        <TouchableOpacity onPress={() => toggleCard(item.id, item)}>
+          <View style={styles.cardLeft}>
+            <Text style={styles.teamName}>{item.teamName}</Text>
+            <Text style={styles.playerNeedText}>
+              Needs {item.playerNeed} Player{item.playerNeed > 1 ? "s" : ""}
+            </Text>
+          </View>
         </TouchableOpacity>
+        {expandedCard === item.id && (
+            <View style={styles.cardRight}>
+              {item.neededPlayers.map((player, index) => (
+                  <Text key={index} style={styles.neededPlayer}>
+                    Needs {player.count} {player.position}(s)
+                  </Text>
+              ))}
+              <TouchableOpacity
+                  style={styles.joinButton}
+                  onPress={() => {
+                    setSelectedPosition("");
+                    setModalVisible(true);
+                  }}
+              >
+                <Text style={styles.joinButtonText}>Join</Text>
+              </TouchableOpacity>
+            </View>
+        )}
       </View>
-    </View>
+  );
+
+  const renderModal = () => (
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalHeading}>{selectedTeam?.teamName}</Text>
+            <Text style={styles.modalSubheading}>Number of Players Needed: {selectedTeam?.playerNeed}</Text>
+            <Text style={styles.modalSubheading}>Select a Position:</Text>
+            {/* List of available positions */}
+            <FlatList
+                data={selectedTeam?.neededPlayers}
+                keyExtractor={(item) => item.position}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        style={styles.positionButton}
+                        onPress={() => setSelectedPosition(item.position)}
+                    >
+                      <Text style={styles.positionButtonText}>{item.position}</Text>
+                    </TouchableOpacity>
+                )}
+            />
+
+            {/* Row containing Join and Cancel buttons */}
+            <View style={styles.buttonRow}>
+              <View style={styles.buttonContainer}>
+                <Button
+                    title="Cancel"
+                    onPress={() => setModalVisible(false)}
+                    color="#DD4B39"  // Red color for Cancel
+                />
+              </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                    title="Join"
+                    onPress={() => {
+                      if (selectedPosition) {
+                        handleJoin(selectedTeam.id, selectedPosition);
+                      }
+                    }}
+                    color="#6A0DAD"  // Purple color for Join
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Teams Need Players</Text>
-      <FlatList
-        data={demoData}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-      />
-    </View>
+      <View style={styles.container}>
+        <Text style={styles.heading}>Teams Need Players</Text>
+        <FlatList
+            data={updatedData}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+        />
+        {renderModal()}
+      </View>
   );
 };
 
@@ -84,8 +180,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   card: {
-    flexDirection: "row",
-    justifyContent: "space-between",
     backgroundColor: "#FFFFFF",
     padding: 16,
     borderRadius: 8,
@@ -96,47 +190,82 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
   },
   cardLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  playerNumberContainer: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    backgroundColor: "#333",
+    flexDirection: "column",
     justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  playerNumber: {
-    color: "#FFF",
-    fontWeight: "bold",
   },
   teamName: {
     fontSize: 16,
     fontWeight: "600",
   },
-  cardRight: {
-    alignItems: "flex-end",
-  },
-  inTime: {
+  playerNeedText: {
     fontSize: 14,
-    color: "#6AD06A",
+    color: "#6A0DAD",
+    fontWeight: "600",
   },
-  outPlayer: {
-    fontSize: 12,
-    color: "#999",
+  cardRight: {
+    marginTop: 10,
+  },
+  neededPlayer: {
+    fontSize: 14,
+    color: "#FF6347",
     marginVertical: 4,
+    fontWeight: "600",
   },
   joinButton: {
     backgroundColor: "#F3E8FF",
     borderRadius: 5,
     paddingVertical: 6,
     paddingHorizontal: 16,
+    marginTop: 10,
   },
   joinButtonText: {
     color: "#6A0DAD",
     fontWeight: "600",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#FFF",
+    padding: 20,
+    borderRadius: 8,
+    width: "80%",
+    alignItems: "center",
+  },
+  modalHeading: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 10,
+  },
+  modalSubheading: {
+    fontSize: 14,
+    marginBottom: 10,
+    color: "#333",
+  },
+  positionButton: {
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: "#6A0DAD",
+    borderRadius: 5,
+    width: "100%",
+    alignItems: "center",
+  },
+  positionButtonText: {
+    color: "#FFF",
+    fontWeight: "600",
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 10,
+  },
+  buttonContainer: {
+    flex: 1,
+    marginHorizontal: 5, // Optional, to add space between buttons
   },
 });
 

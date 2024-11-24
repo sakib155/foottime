@@ -14,6 +14,7 @@ import profile from "@/assets/icons/profile.png";
 import NeedPlayer from "@/assets/icons/NeedPlayer.png";
 import list from "@/assets/icons/list.png";
 import out from "@/assets/icons/out.png";
+import teamNeed from "@/assets/icons/TeamNeed.png";
 export const images = {
   onboarding1,
   onboarding2,
@@ -34,6 +35,7 @@ export const icons = {
   NeedPlayer,
   out,
   list,
+  teamNeed,
 };
 
 export const onboarding = [
